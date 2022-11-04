@@ -76,7 +76,7 @@ class DmaManager : public AllocInterface {
   static DmaManager *GetInstance();
 
  private:
-  DmaManager() {}
+  DmaManager();
   int UnmapBuffer(void *base, unsigned int size, unsigned int offset);
   void GetVMPermission(BufferPermission perm, std::bitset<kVmPermissionMax> *vm_perm);
   void GetCSFVersion();
@@ -98,8 +98,12 @@ class DmaManager : public AllocInterface {
   void *mem_utils_lib_ = {};
   CreateMemBufInterface CreateMemBuf_ = nullptr;
   DestroyMemBufInterface DestroyMemBuf_ = nullptr;
+
   bool movable_heap_system_available_ = false;
   bool movable_heap_ubwcp_available_ = false;
+
+  void* libvmmemPointer;
+  std::unique_ptr<VmMem> (*createVmMem)();
 };
 
 }  // namespace gralloc
