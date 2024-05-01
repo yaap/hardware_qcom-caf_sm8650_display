@@ -317,3 +317,15 @@ subdirs = [
     "qmaa",
     "oem_services",
 ]
+
+cc_library_headers {
+    name: "smmu_proxy_uapi_header",
+    vendor_available: true,
+    export_include_dirs: ["smmu-proxy/include/uapi/"],
+}
+
+cc_library_headers {
+    name: "libubwcp_headers",
+    vendor_available: true,
+    export_include_dirs: ["ubwcp/include/uapi/"],
+}
