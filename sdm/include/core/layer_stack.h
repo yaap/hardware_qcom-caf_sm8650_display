@@ -285,9 +285,6 @@ struct LayerFlags {
                               //!< is used for front-buffer rendering
 
 #ifdef UDFPS_ZPOS
-      uint32_t reserved : 23;      //!< This flag reserves the remaining 4 * 8 - (8 + 1) bits to
-                                   //!< avoid future ABI breakage
-
       uint32_t fod_pressed : 1;    //!< This flag shall be set internally to mark the fod pressed
                                    //!< layer
 #endif

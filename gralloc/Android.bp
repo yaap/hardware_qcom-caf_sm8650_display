@@ -125,7 +125,10 @@ cc_library_shared {
     vendor: true,
     relative_install_path: "hw",
 
-    header_libs: ["display_headers"],
+    header_libs: [
+        "display_headers",
+        "qti_kernel_headers",
+    ],
     shared_libs: [
         "libhidlbase",
         "libgrallocutils",
@@ -165,7 +168,10 @@ cc_binary {
     },
     vendor: true,
     relative_install_path: "hw",
-    header_libs: ["display_headers"],
+    header_libs: [
+        "display_headers",
+        "qti_kernel_headers",
+    ],
     shared_libs: [
         "libbinder",
         "libbinder_ndk",
