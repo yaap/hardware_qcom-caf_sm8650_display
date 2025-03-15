@@ -3,7 +3,6 @@ cc_library_shared {
     name: "libgrallocutils",
     defaults: [
         "qtidisplay_common_defaults",
-        "qtidisplay_libubwcp_header_defaults"
     ],
     vendor: true,
     sanitize: {
@@ -45,8 +44,6 @@ cc_library_shared {
     name: "libgralloccore",
     defaults: [
         "qtidisplay_common_defaults",
-        "qtidisplay_smmu_header_defaults",
-        "qtidisplay_libubwcp_header_defaults"
     ],
     sanitize: {
         integer_overflow: true,
