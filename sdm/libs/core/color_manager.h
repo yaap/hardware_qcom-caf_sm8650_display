@@ -50,6 +50,7 @@
 #include <string>
 #include <mutex>
 
+#include <pxlw_iris_feature.h>
 
 namespace sdm {
 
@@ -163,6 +164,8 @@ class ColorManagerProxy {
   DisplayError NotifyDisplayCalibrationMode(bool in_calibration);
   DisplayError ColorMgrSetLtmPccConfig(void* pcc_input, size_t size);
   DisplayError ColorMgrSetSprIntf(std::shared_ptr<SPRIntf> spr_intf);
+
+  DisplayError SetupSoftIrisLibrary(const std::string& panel_name);
 
  protected:
   ColorManagerProxy() {}

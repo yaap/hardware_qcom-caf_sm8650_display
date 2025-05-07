@@ -19,7 +19,12 @@ cc_binary {
         "-Wno-missing-field-initializers",
         "-Wno-unused-parameter",
         "-DLOG_TAG=\"SDM\"",
-    ],
+    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+        any @ value: [
+            "-DSUPPORTS_PXLW",
+        ],
+        default: [],
+    }),
 
     shared_libs: [
         "libbinder",
@@ -61,7 +66,13 @@ cc_binary {
         "vendor.qti.hardware.display.mapperextensions@1.3",
         "libgrallocutils",
         "libtinyxml2",
-    ],
+    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+        any @ value: [
+            "//" + value + ":libpwirisfeature",
+            "//" + value + ":libpwirishalwrapper",
+        ],
+        default: [],
+    }),
 
     static_libs: [
         "libaidlcommonsupport",
