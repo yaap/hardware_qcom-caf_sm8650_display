@@ -61,6 +61,8 @@ cc_binary {
         "vendor.qti.hardware.display.mapperextensions@1.3",
         "libgrallocutils",
         "libtinyxml2",
+        "libpwirisfeature",
+        "libpwirishalwrapper",
     ],
 
     static_libs: [

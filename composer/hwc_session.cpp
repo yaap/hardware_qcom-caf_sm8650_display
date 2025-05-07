@@ -2906,6 +2906,14 @@ int HWCSession::CreatePrimaryDisplay() {
         }
 
         map_active_displays_.insert(std::make_pair(client_id, &map_info_primary_));
+
+        auto *iris_wrapper = pxlw::PxlwIrisWrapper::GetInstance();
+        if (iris_wrapper) {
+          DisplayConfigVariableInfo config = {};
+          hwc_display[0]->GetDisplayAttributesForConfig(0, &config);
+          reinterpret_cast<pxlw::PxlwSoftirisWrapper *>(iris_wrapper)
+              ->InitPrimaryDisplay(config.vsync_period_ns, config.x_pixels, config.y_pixels);
+        }
       } else {
         DLOGE("Primary display creation has failed! status = %d", status);
         return status;

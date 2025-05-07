@@ -23,6 +23,7 @@ cc_library_shared {
         "libdrmutils",
         "libsdedrm",
         "libsdmdal",
+        "libpwirisfeature",
     ],
 
     srcs: [
