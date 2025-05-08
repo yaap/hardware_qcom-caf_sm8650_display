@@ -626,6 +626,12 @@ enum struct DRMOps {
    *      uint32_t - Brightness Level
    */
   CONNECTOR_SET_BRIGHTNESS,
+  /*
+   * Op: Sets fingerprint mode on this connector
+   * Arg: uint32_t - Connector ID
+   *      uint32_t - fingerprint mode
+   */
+  CONNECTOR_PROP_HBM_ENABLE,
 };
 
 enum struct DRMRotation {

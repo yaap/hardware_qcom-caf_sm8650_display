@@ -8,6 +8,7 @@ soong_config_module_type {
         "llvmsa",
         "gralloc4",
         "udfps",
+        "oplus_fingerprint",
         "default",
         "var3",
         "llvmcov",
@@ -149,6 +150,9 @@ qtidisplay_cc_defaults {
         },
         udfps: {
             cflags: ["-DUDFPS_ZPOS"],
+        },
+        oplus_fingerprint: {
+            cflags: ["-DOPLUS_HBM"],
         },
         var3 : {
             enabled: false,

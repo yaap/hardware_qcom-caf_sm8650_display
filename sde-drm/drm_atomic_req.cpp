@@ -186,7 +186,8 @@ int DRMAtomicReq::Perform(DRMOps opcode, uint32_t obj_id, ...) {
     case DRMOps::CONNECTOR_WB_USAGE_TYPE:
     case DRMOps::CONNECTOR_SET_CACHE_STATE:
     case DRMOps::CONNECTOR_SET_EPT:
-    case DRMOps::CONNECTOR_SET_BPP_MODE: {
+    case DRMOps::CONNECTOR_SET_BPP_MODE:
+    case DRMOps::CONNECTOR_PROP_HBM_ENABLE: {
       drm_mgr_->GetConnectorMgr()->Perform(opcode, obj_id, drm_atomic_req_, args);
     } break;
     case DRMOps::DPPS_CACHE_FEATURE: {
