@@ -3330,25 +3330,33 @@ uint64_t HWDeviceDRM::GetSupportedBitClkRate(uint32_t new_mode_index,
     uint32_t submode_idx = connector_info_.modes[current_mode_index_].curr_submode_index;
     sde_drm::DRMSubModeInfo curr_sub_mode =
                          connector_info_.modes[current_mode_index_].sub_modes[submode_idx];
+#ifndef BITCLK_RATE_PERMISSIVE
     if ((std::find(curr_sub_mode.dyn_bitclk_list.begin(), curr_sub_mode.dyn_bitclk_list.end(),
          bit_clk_rate_request) != curr_sub_mode.dyn_bitclk_list.end())) {
+#endif
       return bit_clk_rate_request;
+#ifndef BITCLK_RATE_PERMISSIVE
     } else {
       DLOGW("Requested rate not supported: %" PRIu64, bit_clk_rate_request);
       return connector_info_.modes[current_mode_index_].curr_bit_clk_rate;
     }
+#endif
   }
 
   uint32_t submode_idx = connector_info_.modes[new_mode_index].curr_submode_index;
   sde_drm::DRMSubModeInfo curr_sub_mode =
                        connector_info_.modes[new_mode_index].sub_modes[submode_idx];
+#ifndef BITCLK_RATE_PERMISSIVE
   if ((std::find(curr_sub_mode.dyn_bitclk_list.begin(), curr_sub_mode.dyn_bitclk_list.end(),
        bit_clk_rate_request) != curr_sub_mode.dyn_bitclk_list.end())) {
+#endif
     return bit_clk_rate_request;
+#ifndef BITCLK_RATE_PERMISSIVE
   } else {
     DLOGW("Requested rate not supported: %" PRIu64, bit_clk_rate_request);
     return connector_info_.modes[new_mode_index].default_bit_clk_rate;
   }
+#endif
 }
 
 bool HWDeviceDRM::SetupConcurrentWriteback(const HWLayersInfo &hw_layer_info, bool validate,

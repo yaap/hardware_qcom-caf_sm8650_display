@@ -10,6 +10,7 @@ soong_config_module_type {
         "udfps",
         "oplus_udfps",
         "samsung_udfps",
+        "bitclk_rate_permissive",
         "default",
         "var3",
         "llvmcov",
@@ -162,6 +163,9 @@ qtidisplay_cc_defaults {
         oplus_udfps: {
             cflags: ["-DCONNECTOR_PROP_UDFPS", "-DOPLUS_FINGERPRINT_MASK"],
             include_dirs: ["frameworks/native/services/surfaceflinger/CompositionEngine/include/compositionengine"],
+        },
+        bitclk_rate_permissive: {
+            cflags: ["-DBITCLK_RATE_PERMISSIVE"],
         },
         samsung_udfps: {
             cflags: ["-DCONNECTOR_PROP_UDFPS", "-DSEC_FINGERPRINT_MASK"],
