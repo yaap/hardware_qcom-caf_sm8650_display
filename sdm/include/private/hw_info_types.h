@@ -369,7 +369,7 @@ const int  kPipeDmaLimit       = (1 << 1);
 const int  kPipeScalingLimit   = (1 << 2);
 const int  kPipeRotationLimit  = (1 << 3);
 
-struct LegacyHWResourceInfo {
+struct HWResourceInfo {
   uint32_t hw_version = 0;
   uint32_t num_dma_pipe = 0;
   uint32_t num_vig_pipe = 0;
@@ -442,9 +442,6 @@ struct LegacyHWResourceInfo {
   bool skip_inline_rot_threshold = false;
   bool has_noise_layer = false;
   uint32_t dsc_block_count = 0;
-};
-
-struct HWResourceInfo : LegacyHWResourceInfo {
   DDRVersion ddr_version = kDDRVersion5;
 };
 
