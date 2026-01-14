@@ -375,9 +375,10 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
     }
   }
 
-  if (IsUBwcPEnabled(format, usage)) {
+  const bool ubwcp_enabled = IsUBwcPEnabled(format, usage);
+  if (ubwcp_enabled) {
     heap_name = "qcom,ubwcp";
-    ALOGI("UBWCP enabled:%d heap_name:%s", IsUBwcPEnabled(format, usage), heap_name.c_str());
+    ALOGI("UBWCP enabled:%d heap_name:%s", ubwcp_enabled, heap_name.c_str());
   }
 
   *alloc_type = type;
