@@ -14,12 +14,12 @@ cc_library_shared {
         "-Wno-format",
         "-Wno-unused-parameter",
         "-DLOG_TAG=\"SDM\"",
-    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+    ] + select(soong_config_variable("qtidisplay", "sm8650_pxlw_vendor_namespace"), {
         any @ value: [
             "-DSUPPORTS_PXLW",
         ],
         default: [],
-    }) + select(soong_config_variable("qtidisplay", "pxlw_hw_iris7"), {
+    }) + select(soong_config_variable("qtidisplay", "sm8650_pxlw_hw_iris7"), {
         "true": [
             "-DSUPPORTS_PXLW_IRIS7",
         ],
@@ -33,7 +33,7 @@ cc_library_shared {
         "libdrmutils",
         "libsdedrm",
         "libsdmdal",
-    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+    ] + select(soong_config_variable("qtidisplay", "sm8650_pxlw_vendor_namespace"), {
         any @ value: [
             "//" + value + ":libpwirisfeature",
         ],

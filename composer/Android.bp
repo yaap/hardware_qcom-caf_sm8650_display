@@ -19,12 +19,12 @@ cc_binary {
         "-Wno-missing-field-initializers",
         "-Wno-unused-parameter",
         "-DLOG_TAG=\"SDM\"",
-    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+    ] + select(soong_config_variable("qtidisplay", "sm8650_pxlw_vendor_namespace"), {
         any @ value: [
             "-DSUPPORTS_PXLW",
         ],
         default: [],
-    }) + select(soong_config_variable("qtidisplay", "pxlw_hw_iris7"), {
+    }) + select(soong_config_variable("qtidisplay", "sm8650_pxlw_hw_iris7"), {
         "true": [
             "-DSUPPORTS_PXLW_IRIS7",
         ],
@@ -71,7 +71,7 @@ cc_binary {
         "vendor.qti.hardware.display.mapperextensions@1.3",
         "libgrallocutils",
         "libtinyxml2",
-    ] + select(soong_config_variable("qtidisplay", "pxlw_vendor_namespace"), {
+    ] + select(soong_config_variable("qtidisplay", "sm8650_pxlw_vendor_namespace"), {
         any @ value: [
             "//" + value + ":libpwirisfeature",
             "//" + value + ":libpwirishalwrapper",
