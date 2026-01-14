@@ -144,11 +144,6 @@ int DmaManager::AllocBuffer(AllocData *data) {
   ATRACE_CALL();
   unsigned int flags = data->flags;
 
-  std::string tag_name{};
-  if (ATRACE_ENABLED()) {
-    tag_name = "libdma alloc size: " + std::to_string(data->size);
-  }
-
   ATRACE_BEGIN("GrallocAllocation");
   dma_dev_fd_ = buffer_allocator_.Alloc(data->heap_name, data->size, flags, data->align);
   ATRACE_END();
