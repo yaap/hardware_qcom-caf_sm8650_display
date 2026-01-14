@@ -88,28 +88,31 @@ DmaManager *DmaManager::GetInstance() {
 }
 
 void DmaManager::InitMemUtils() {
-  if (mem_utils_lib_) {
-    return;
-  }
-  mem_utils_lib_ = ::dlopen(MEMBUF_CLIENT_LIB_NAME, RTLD_NOW);
-  if (mem_utils_lib_) {
-    CreateMemBuf_ = reinterpret_cast<CreateMemBufInterface>(::dlsym(mem_utils_lib_,
-                                                            CREATE_MEMBUF_INTERFACE_NAME));
-    DestroyMemBuf_ = reinterpret_cast<DestroyMemBufInterface>(::dlsym(mem_utils_lib_,
-                                                             DESTROY_MEMBUF_INTERFACE_NAME));
-    if (!CreateMemBuf_ || !DestroyMemBuf_) {
-      ALOGW("Membuf Symbols not resolved");
+  std::call_once(mem_utils_once_, [this]() {
+    if (mem_utils_lib_) {
       return;
     }
-  } else {
-    ALOGW("Unable to load = %s, error = %s", MEMBUF_CLIENT_LIB_NAME, ::dlerror());
-    return;
-  }
-  int err = CreateMemBuf_(&mem_buf_);
-  if (err != 0) {
-    ALOGW("GetMemBuf failed!! %d", err);
-    return;
-  }
+    mem_utils_lib_ = ::dlopen(MEMBUF_CLIENT_LIB_NAME, RTLD_NOW);
+    if (mem_utils_lib_) {
+      CreateMemBuf_ = reinterpret_cast<CreateMemBufInterface>(::dlsym(mem_utils_lib_,
+                                                              CREATE_MEMBUF_INTERFACE_NAME));
+      DestroyMemBuf_ = reinterpret_cast<DestroyMemBufInterface>(::dlsym(mem_utils_lib_,
+                                                               DESTROY_MEMBUF_INTERFACE_NAME));
+      if (!CreateMemBuf_ || !DestroyMemBuf_) {
+        ALOGW("Membuf Symbols not resolved");
+        return;
+      }
+    } else {
+      ALOGW("Unable to load = %s, error = %s", MEMBUF_CLIENT_LIB_NAME, ::dlerror());
+      return;
+    }
+    int err = CreateMemBuf_(&mem_buf_);
+    if (err != 0) {
+      ALOGW("GetMemBuf failed!! %d", err);
+      mem_buf_ = nullptr;
+      return;
+    }
+  });
 
   // check heap availability
   auto heap_list = buffer_allocator_.GetDmabufHeapList();

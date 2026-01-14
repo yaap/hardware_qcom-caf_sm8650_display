@@ -41,6 +41,7 @@
 #include <string>
 #include <vector>
 #include <bitset>
+#include <mutex>
 
 #include "gr_alloc_interface.h"
 #include "membuf_wrapper.h"
@@ -84,6 +85,8 @@ class DmaManager : public AllocInterface {
   void InitMemUtils();
   void DeinitMemUtils();
   void Deinit();
+
+  std::once_flag mem_utils_once_;
 
   int dma_dev_fd_ = FD_INIT;
   BufferAllocator buffer_allocator_;
