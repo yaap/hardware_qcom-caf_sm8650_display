@@ -309,6 +309,12 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
                              unsigned int *alloc_size) {
   // Query Camera Security Framework in order to allocate from legacy/non-legacy heap
   GetCSFVersion();
+
+  if (dma_vm_names) {
+    dma_vm_names->clear();
+    dma_vm_names->reserve(3);
+  }
+
   std::string heap_name = "qcom,system";
 
   if (uncached_heap_prop_ && use_uncached) {
@@ -318,7 +324,7 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
   if (usage & GRALLOC_USAGE_PROTECTED) {
     if (usage & GRALLOC_USAGE_PRIVATE_SECURE_DISPLAY) {
       heap_name = "qcom,display";
-      dma_vm_names->push_back("qcom,cp_sec_display");
+      dma_vm_names->emplace_back("qcom,cp_sec_display");
     } else if (usage & BufferUsage::CAMERA_OUTPUT) {
       // CSF 2.5 version and up
       if (CSFEnabled()) {
@@ -328,19 +334,19 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
         heap_name = "qcom,display";
       }
       if (usage & GRALLOC_USAGE_PRIVATE_CDSP) {
-        dma_vm_names->push_back("qcom,cp_cdsp");
+        dma_vm_names->emplace_back("qcom,cp_cdsp");
       }
       // Below CSF 2.5
       if (!CSFEnabled()) {
         if ((usage & BufferUsage::COMPOSER_OVERLAY)) {
           if (secure_preview_only_) {
-            dma_vm_names->push_back("qcom,cp_camera_preview");
+            dma_vm_names->emplace_back("qcom,cp_camera_preview");
           } else {
-            dma_vm_names->push_back("qcom,cp_camera");
-            dma_vm_names->push_back("qcom,cp_camera_preview");
+            dma_vm_names->emplace_back("qcom,cp_camera");
+            dma_vm_names->emplace_back("qcom,cp_camera_preview");
           }
         } else {
-          dma_vm_names->push_back("qcom,cp_camera");
+          dma_vm_names->emplace_back("qcom,cp_camera");
         }
       }
     } else if (usage & GRALLOC_USAGE_PRIVATE_CDSP) {
