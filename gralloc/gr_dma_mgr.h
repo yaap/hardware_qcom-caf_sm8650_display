@@ -42,6 +42,7 @@
 #include <vector>
 #include <bitset>
 #include <mutex>
+#include <unordered_map>
 
 #include "gr_alloc_interface.h"
 #include "membuf_wrapper.h"
@@ -87,6 +88,13 @@ class DmaManager : public AllocInterface {
   void Deinit();
 
   std::once_flag mem_utils_once_;
+
+  std::unique_ptr<VmMem> vmmem_cached_;
+  bool vmmem_initialized_ = false;
+  std::unordered_map<std::string, VmHandle> vm_handle_cache_;
+
+  void InitVmMem();
+  VmHandle GetCachedVmHandle(const std::string &vm_name);
 
   int dma_dev_fd_ = FD_INIT;
   BufferAllocator buffer_allocator_;
