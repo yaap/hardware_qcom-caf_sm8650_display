@@ -103,8 +103,10 @@ class DmaManager : public AllocInterface {
   bool movable_heap_ubwcp_available_ = false;
   void GetUncachedHeapUsage();
   bool uncached_heap_prop_ = false;
+  void GetSecurePreviewOnly();
   void GetCameraPreviewPerms();
   bool allow_camera_preview_write_ = false;
+  int secure_preview_only_ = 0;
 
   void* libvmmemPointer;
   std::unique_ptr<VmMem> (*createVmMem)();

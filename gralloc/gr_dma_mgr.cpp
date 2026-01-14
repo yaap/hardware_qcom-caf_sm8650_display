@@ -322,11 +322,6 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
       heap_name = "qcom,display";
       dma_vm_names->push_back("qcom,cp_sec_display");
     } else if (usage & BufferUsage::CAMERA_OUTPUT) {
-      int secure_preview_only = 0;
-      char property[PROPERTY_VALUE_MAX];
-      if (property_get(SECURE_PREVIEW_ONLY_PROP, property, NULL) > 0) {
-        secure_preview_only = atoi(property);
-      }
       // CSF 2.5 version and up
       if (CSFEnabled()) {
         heap_name = "qcom,system";
@@ -340,7 +335,7 @@ void DmaManager::GetHeapInfo(uint64_t usage, bool sensor_flag, int format, bool 
       // Below CSF 2.5
       if (!CSFEnabled()) {
         if ((usage & BufferUsage::COMPOSER_OVERLAY)) {
-          if (secure_preview_only) {
+          if (secure_preview_only_) {
             dma_vm_names->push_back("qcom,cp_camera_preview");
           } else {
             dma_vm_names->push_back("qcom,cp_camera");
@@ -455,6 +450,15 @@ void DmaManager::GetUncachedHeapUsage() {
   }
   uncached_heap_prop_ = false;
   return;
+}
+
+void DmaManager::GetSecurePreviewOnly() {
+  char property[PROPERTY_VALUE_MAX];
+  if (property_get(SECURE_PREVIEW_ONLY_PROP, property, NULL) > 0) {
+    secure_preview_only_ = atoi(property);
+    return;
+  }
+  secure_preview_only_ = 0;
 }
 
 void DmaManager::GetCameraPreviewPerms() {
