@@ -491,8 +491,8 @@ HWC3::Error HWCDisplayBuiltIn::SetColorModeWithRenderIntent(ColorMode mode, Rend
         0, 0, static_cast<int32_t>(mode), static_cast<int32_t>(intent));
 #else
     reinterpret_cast<pxlw::PxlwSoftirisWrapper*>(iris_wrapper)->SetColorModeWithRenderIntent(
-      0, 0, static_cast<android::hardware::graphics::common::V1_2::ColorMode>(mode), 
-      static_cast<android::hardware::graphics::common::V1_1::RenderIntent>(intent));
+      0, 0, static_cast<int32_t>(mode), 
+      static_cast<int32_t>(intent));
 #endif
   }
 #endif

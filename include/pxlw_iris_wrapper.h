@@ -48,9 +48,7 @@ private:
 class PxlwSoftirisWrapper {
 public:
     int InitPrimaryDisplay(int param_1, unsigned int param_2, unsigned int param_3);
-    void SetColorModeWithRenderIntent(int param_1, int param_2, 
-                                    android::hardware::graphics::common::V1_2::ColorMode param_3,
-                                    android::hardware::graphics::common::V1_1::RenderIntent param_4);
+    void SetColorModeWithRenderIntent(int param_1, int param_2, int32_t param_3, int32_t param_4);
 
 private:
     PxlwSoftirisWrapper() = default;
