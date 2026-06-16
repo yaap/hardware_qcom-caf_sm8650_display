@@ -2029,7 +2029,7 @@ int GetYUVPlaneInfo(const BufferInfo &info, int32_t format, int32_t width, int32
     case HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED:
     default:
       *plane_count = 0;
-      ALOGD("%s: Invalid format passed: 0x%x", __FUNCTION__, format);
+      ALOGD_IF(DEBUG, "%s: Invalid format passed: 0x%x", __FUNCTION__, format);
       err = -EINVAL;
   }
   if (err == 0 && hnd != nullptr && ycbcr != nullptr) {
