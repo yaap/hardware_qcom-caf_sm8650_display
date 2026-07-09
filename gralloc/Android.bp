@@ -48,6 +48,7 @@ cc_library_shared {
     header_libs: [
         "display_headers",
         "qti_kernel_headers",
+        "libvmmem_headers",
     ],
     include_dirs: [
         "system/memory/libion/include",
