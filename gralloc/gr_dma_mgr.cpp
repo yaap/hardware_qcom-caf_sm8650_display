@@ -244,54 +244,16 @@ int DmaManager::UnmapBuffer(void *base, unsigned int size, unsigned int /*offset
   return err;
 }
 
-void DmaManager::InitVmMem() {
-  if (vmmem_initialized_) {
-    return;
-  }
-
-  if (!createVmMem) {
-    vmmem_initialized_ = true;
-    return;
-  }
-
-  vmmem_cached_ = createVmMem();
-  if (!vmmem_cached_) {
-    vmmem_initialized_ = true;
-    return;
-  }
-
-  static const char *kVmNames[] = {
-      "qcom,cp_sec_display",
-      "qcom,cp_camera_preview",
-      "qcom,cp_camera",
-      "qcom,cp_cdsp",
-  };
-  for (const char *name : kVmNames) {
-    VmHandle handle = vmmem_cached_->FindVmByName(name);
-    vm_handle_cache_.emplace(name, handle);
-  }
-
-  vmmem_initialized_ = true;
-}
-
-VmHandle DmaManager::GetCachedVmHandle(const std::string &vm_name) {
-  auto it = vm_handle_cache_.find(vm_name);
-  if (it != vm_handle_cache_.end()) {
-    return it->second;
-  }
-  return vmmem_cached_ ? vmmem_cached_->FindVmByName(vm_name) : VmHandle{};
-}
-
 int DmaManager::SecureMemPerms(AllocData *data) {
   int ret = 0;
-  InitVmMem();
-  if (!vmmem_cached_) {
+  std::unique_ptr<VmMem> vmmem = createVmMem();
+  if (!vmmem) {
     return -ENOMEM;
   }
   VmPerm vm_perms;
 
   for (auto vm_name : data->vm_names) {
-    VmHandle handle = GetCachedVmHandle(vm_name);
+    VmHandle handle = vmmem->FindVmByName(vm_name);
     if (vm_name == "qcom,cp_sec_display") {
       vm_perms.push_back(std::make_pair(handle, VMMEM_READ));
     } else if (vm_name == "qcom,cp_camera_preview") {
@@ -307,7 +269,7 @@ int DmaManager::SecureMemPerms(AllocData *data) {
     }
   }
 
-  ret = vmmem_cached_->LendDmabuf(data->fd, vm_perms);
+  ret = vmmem->LendDmabuf(data->fd, vm_perms);
   return ret;
 }
 
