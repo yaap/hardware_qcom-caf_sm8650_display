@@ -143,6 +143,25 @@ void HWCColorModeStc::PopulateColorModes() {
             dynamic_range);
     }
   }
+
+#ifdef PXLW_IRIS
+  auto p3_modes = color_mode_map_.find(ColorMode::DISPLAY_P3);
+  if (p3_modes != color_mode_map_.end()) {
+    const std::pair<RenderIntent, RenderIntent> intent_pairs[] = {
+            {static_cast<RenderIntent>(301), static_cast<RenderIntent>(302)},
+            {static_cast<RenderIntent>(303), static_cast<RenderIntent>(304)},
+            {static_cast<RenderIntent>(307), static_cast<RenderIntent>(308)},
+    };
+    for (const auto& [srgb_intent, p3_intent] : intent_pairs) {
+      if (p3_modes->second.find(srgb_intent) == p3_modes->second.end()) {
+        auto mode = p3_modes->second.find(p3_intent);
+        if (mode != p3_modes->second.end()) {
+          p3_modes->second.emplace(srgb_intent, mode->second);
+        }
+      }
+    }
+  }
+#endif
 }
 
 int32_t HWCColorModeStc::GetStcColorModeFromMap(const ColorMode &mode, const RenderIntent &intent,

@@ -174,6 +174,8 @@ class HWCColorMode {
   std::map<ColorMode, DynamicRangeMap> preferred_mode_ = {};
 };
 
+RenderIntent GetPxlwP3RenderIntent(ColorMode mode, RenderIntent intent);
+
 class HWCDisplay : public DisplayEventHandler {
  public:
   enum DisplayStatus {

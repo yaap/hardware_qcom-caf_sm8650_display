@@ -57,6 +57,23 @@
 using aidl::android::hardware::graphics::common::StandardMetadataType;
 namespace sdm {
 
+RenderIntent GetPxlwP3RenderIntent(ColorMode mode, RenderIntent intent) {
+  if (mode != ColorMode::DISPLAY_P3) {
+    return intent;
+  }
+
+  if (intent == static_cast<RenderIntent>(301)) {
+    return static_cast<RenderIntent>(302);
+  }
+  if (intent == static_cast<RenderIntent>(303)) {
+    return static_cast<RenderIntent>(304);
+  }
+  if (intent == static_cast<RenderIntent>(307)) {
+    return static_cast<RenderIntent>(308);
+  }
+  return intent;
+}
+
 bool HWCDisplay::mmrm_restricted_ = false;
 uint32_t HWCDisplay::throttling_refresh_rate_ = 60;
 
