@@ -49,6 +49,10 @@
 #include "hwc_color_mode_stc.h"
 #include "hwc_session.h"
 
+#if __has_include("pxlw_color_mode_config.h")
+#include "pxlw_color_mode_config.h"
+#endif
+
 #define __CLASS__ "HWCColorModeStc"
 
 namespace sdm {
@@ -119,8 +123,7 @@ void HWCColorModeStc::PopulateColorModes() {
     return;
   }
 
-  for (uint32_t i = 0; i < stc_mode_list_.list.size(); i++) {
-    snapdragoncolor::ColorMode stc_mode = stc_mode_list_.list[i];
+  for (snapdragoncolor::ColorMode stc_mode : stc_mode_list_.list) {
     if (stc_mode.intent == snapdragoncolor::kNative) {
       // Setting Max for native mode gamut and gamma
       stc_mode.gamut = allow_tonemap_native ? ColorPrimaries_BT709_5 : ColorPrimaries_Max;
@@ -145,14 +148,12 @@ void HWCColorModeStc::PopulateColorModes() {
   }
 
 #ifdef PXLW_IRIS
+#ifdef PXLW_COLOR_MODE_CONFIG_AVAILABLE
   auto p3_modes = color_mode_map_.find(ColorMode::DISPLAY_P3);
   if (p3_modes != color_mode_map_.end()) {
-    const std::pair<RenderIntent, RenderIntent> intent_pairs[] = {
-            {static_cast<RenderIntent>(301), static_cast<RenderIntent>(302)},
-            {static_cast<RenderIntent>(303), static_cast<RenderIntent>(304)},
-            {static_cast<RenderIntent>(307), static_cast<RenderIntent>(308)},
-    };
-    for (const auto& [srgb_intent, p3_intent] : intent_pairs) {
+    for (const auto &pair : kPxlwP3RenderIntentPairs) {
+      const auto srgb_intent = static_cast<RenderIntent>(pair.surface_flinger);
+      const auto p3_intent = static_cast<RenderIntent>(pair.iris);
       if (p3_modes->second.find(srgb_intent) == p3_modes->second.end()) {
         auto mode = p3_modes->second.find(p3_intent);
         if (mode != p3_modes->second.end()) {
@@ -161,6 +162,7 @@ void HWCColorModeStc::PopulateColorModes() {
       }
     }
   }
+#endif
 #endif
 }
 

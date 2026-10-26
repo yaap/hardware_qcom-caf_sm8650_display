@@ -13,7 +13,10 @@ cc_binary {
         "display_headers",
         "qti_kernel_headers",
     ],
-
+    include_dirs: select(soong_config_variable("qtidisplay", "pxlw_color_config_include"), {
+        any @ path: [path],
+        default: [],
+    }),
     cflags: [
         "-Wno-format",
         "-Wno-missing-field-initializers",

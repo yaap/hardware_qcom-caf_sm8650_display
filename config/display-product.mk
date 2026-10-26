@@ -203,6 +203,7 @@ SOONG_CONFIG_qtidisplay := drmpp headless llvmsa \
                            composer_version smmu_proxy \
                            ubwcp_headers sixzone_version
 SOONG_CONFIG_qtidisplay += udfps
+SOONG_CONFIG_qtidisplay += pxlw_color_config_include
 
 # Soong Values
 SOONG_CONFIG_qtidisplay_drmpp := true

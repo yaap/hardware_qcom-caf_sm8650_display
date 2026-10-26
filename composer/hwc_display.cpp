@@ -48,6 +48,10 @@
 #include "hwc_tonemapper.h"
 #include "hwc_session.h"
 
+#if __has_include("pxlw_color_mode_config.h")
+#include "pxlw_color_mode_config.h"
+#endif
+
 #ifdef QTI_BSP
 #include <hardware/display_defs.h>
 #endif
@@ -58,19 +62,19 @@ using aidl::android::hardware::graphics::common::StandardMetadataType;
 namespace sdm {
 
 RenderIntent GetPxlwP3RenderIntent(ColorMode mode, RenderIntent intent) {
+#if defined(PXLW_COLOR_MODE_CONFIG_AVAILABLE)
   if (mode != ColorMode::DISPLAY_P3) {
     return intent;
   }
 
-  if (intent == static_cast<RenderIntent>(301)) {
-    return static_cast<RenderIntent>(302);
+  for (const auto &pair : kPxlwP3RenderIntentPairs) {
+    if (intent == static_cast<RenderIntent>(pair.surface_flinger)) {
+      return static_cast<RenderIntent>(pair.iris);
+    }
   }
-  if (intent == static_cast<RenderIntent>(303)) {
-    return static_cast<RenderIntent>(304);
-  }
-  if (intent == static_cast<RenderIntent>(307)) {
-    return static_cast<RenderIntent>(308);
-  }
+#else
+  (void)mode;
+#endif
   return intent;
 }
 
