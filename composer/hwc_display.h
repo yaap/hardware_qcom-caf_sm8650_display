@@ -610,6 +610,9 @@ class HWCDisplay : public DisplayEventHandler {
   qService::QService *qservice_ = NULL;
   DisplayClass display_class_;
   uint32_t geometry_changes_on_doze_suspend_ = GeometryChanges::kNone;
+#ifdef OPLUS_FINGERPRINT_MASK
+  uint32_t last_fod_mask_ = 0;
+#endif
   bool first_cycle_ = true;  // false if a display commit has succeeded on the device.
   shared_ptr<Fence> release_fence_ = nullptr;
   Config pending_config_index_ = 0;

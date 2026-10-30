@@ -385,6 +385,10 @@ struct LayerStackFlags {
       bool default_strategy: 1;  //!< This flag indicates the default strategy usage.
 
       uint32_t front_buffer_layer_present : 1;  //!< Set if stack has front buffer layer.
+
+      uint32_t fod_mask : 2;  //!< UDFPS (on-screen fingerprint) mask, derived by the client
+                              //!< from the complete HWC layer set so that it does not depend
+                              //!< on the composition type chosen for the UDFPS layers.
     };
 
     uint32_t flags = 0;               //!< For initialization purpose only.

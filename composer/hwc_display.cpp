@@ -48,6 +48,18 @@
 #include "hwc_tonemapper.h"
 #include "hwc_session.h"
 
+#ifdef OPLUS_FINGERPRINT_MASK
+// SurfaceFlinger hands the HWC layers the name of their gralloc buffer ("NAME" metadata),
+// e.g. "VRI[UdfpsControllerOverlay]#15(BLAST Consumer)15" for the UDFPS prompt window and
+// "SurfaceView[UdfpsControllerOverlay]#16(BLAST Consumer)16" for the pressed icon. Match the
+// part that is common to both so the detection does not depend on which of the two layers is
+// present, nor on how the client decided to compose it.
+#define OPLUS_UDFPS_NAME "UdfpsControllerOverlay"
+#define OPLUS_UDFPS_DIM_NAME "Dim Layer for UDFPS"
+#define OPLUS_UDFPS_DIM_LAYER_BIT 0x1
+#define OPLUS_UDFPS_PRESSED_LAYER_BIT 0x2
+#endif
+
 #if __has_include("pxlw_color_mode_config.h")
 #include "pxlw_color_mode_config.h"
 #endif
@@ -869,8 +881,34 @@ void HWCDisplay::BuildLayerStack() {
     layer->layer_id = hwc_layer->GetId();
     layer->layer_name = hwc_layer->GetName();
     layer->geometry_changes = hwc_layer->GetGeometryChanges();
+#ifdef OPLUS_FINGERPRINT_MASK
+    // Derive the UDFPS mask from the complete HWC layer set. HWLayersInfo::hw_layers (which
+    // HWDeviceDRM used to scan) only holds the layers SDM managed to program on the hardware,
+    // so a UDFPS layer that the client composed on the GPU silently dropped out of the
+    // fingerprint detection and the panel never entered HBM/LHBM.
+    if (!layer->visible_regions.empty()) {
+      if (layer->layer_name.find(OPLUS_UDFPS_DIM_NAME) != std::string::npos) {
+        layer_stack_.flags.fod_mask |= OPLUS_UDFPS_DIM_LAYER_BIT;
+      } else if (layer->layer_name.find(OPLUS_UDFPS_NAME) != std::string::npos) {
+        layer_stack_.flags.fod_mask |= OPLUS_UDFPS_PRESSED_LAYER_BIT;
+      }
+    }
+#endif
     layer_stack_.layers.push_back(layer);
   }
+
+#ifdef OPLUS_FINGERPRINT_MASK
+  if (last_fod_mask_ != layer_stack_.flags.fod_mask) {
+    last_fod_mask_ = layer_stack_.flags.fod_mask;
+    std::ostringstream os;
+    os << "UDFPS mask " << last_fod_mask_ << " layers:";
+    for (auto hwc_layer : layer_set_) {
+      os << " [" << hwc_layer->GetName() << " "
+         << to_string(hwc_layer->GetClientRequestedCompositionType()) << "]";
+    }
+    DLOGI("%s", os.str().c_str());
+  }
+#endif
 
   // TODO(user): Set correctly when SDM supports geometry_changes as bitmask
 
@@ -2673,6 +2711,9 @@ DisplayClass HWCDisplay::GetDisplayClass() {
 void HWCDisplay::Dump(std::ostringstream *os) {
   *os << "\n------------HWC----------------\n";
   *os << "HWC3 display_id: " << id_ << std::endl;
+#ifdef OPLUS_FINGERPRINT_MASK
+  *os << "UDFPS mask: " << layer_stack_.flags.fod_mask << std::endl;
+#endif
   for (auto layer : layer_set_) {
     auto sdm_layer = layer->GetSDMLayer();
     auto transform = sdm_layer->transform;
